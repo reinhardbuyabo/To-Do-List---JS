@@ -1,6 +1,6 @@
 const addNewTodoButton = document.getElementById("add-new-todo"); // Button referenced representing the add new todo.
 const createTodoButton = document.getElementById("create-todo"); // Button referenced representing create todo.
-const updateTodoButton = document.getElementById("update-todo"); // Button referenced  representing update todo. 
+const updateTodoButton = document.getElementById("update-todo"); // Button referenced representing update todo. 
 const idField = document.getElementById("id-field"); // Input referenced representing the todo id. It is readonly.
 const timeField = document.getElementById("time-field"); // Input referenced representing the todo timestamp
 const bodyField = document.getElementById("body-field"); // Textarea referenced representing the todo body.
@@ -51,6 +51,12 @@ const displayAllTodos = () => {
 			document.querySelector(".fa-edit").addEventListener("click", (e) => {
 				editTodo(e.currentTarget.parentNode.parentNode.dataset.id);
 			});
+			document.querySelector(".fa-trash-alt").addEventListener("click", (e) => {
+				deleteTodo(e.currentTarget.parentNode.parentNode.dataset.id);
+			});
+			document.querySelector(".fa-check").addEventListener("click", (e) => {
+				markTodoAsComplete(e.currentTarget.parentNode.parentNode.dataset.id);
+			})
 		}
 	}).catch(err => console.log(err));
 	console.log(Todos); 
@@ -90,7 +96,7 @@ const addTodo = () => {
 		addNewTodo();
 	} else {
 		axios
-    .post('http://localhost:8000/posts', {id,timestamp, body, status})
+    .post('http://localhost:8000/posts', {id, timestamp, body, status})
     .then(res => console.log(res.data))
     .catch(err => console.error(err));
 	idField.value = "";
@@ -108,6 +114,7 @@ const editTodo = (itemId) => {
 	idField.value = id;
 	timeField.value = getTimeStamp(); 
 	bodyField.value = body;
+
 }
 
 const generateID = () => {
@@ -129,6 +136,11 @@ const addNewTodo = () => {
 
 const deleteTodo = (itemId) => {
 	Todos = Todos.filter(todo => todo.id != itemId);
+
+	axios.delete(`http://localhost:8000/posts/${itemId}`)
+	.then(res => console.log(res))
+	.catch(err => console.log(err));
+
 	displayAllTodos();
 }
 
@@ -136,14 +148,32 @@ const updateTodo = () => {
 	const todos = Todos.map(todo=>{
 		if(todo.id === idField.value){
 			todo.status = "Not complete";
-			todo.body = bodyField.value;
+			todo.body = bodyField.value; // Assigns changed to do value to the current todo iteration.
 			todo.timestamp = timeField.value;
 			return todo;
 		}else{
 			return todo;
 		}
 	})
+
+	let updateid;
+	let updatebody;
+	for (index in todos) {
+		if (todos[index].id == idField.value) {
+			updateid = todos[index].id;
+			updatebody = todos[index].body;
+			console.log(todos[index]);
+		} 			
+	}
+
+	axios.patch(`http://localhost:8000/posts/${updateid}`, {
+		'body': updatebody
+	})
+	.then((res) => console.log(res))
+	.catch(err => console.log(err));
+
 	Todos = todos;
+	console.log(todos);
 	idField.value = "";
 	timeField.value = "";
 	bodyField.value = "";

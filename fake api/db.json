@@ -1,12 +1,6 @@
 {
   "posts": [
     {
-      "id": "z3sts7-ab79-tvf0-0ru3eo",
-      "timestamp": "2022-6-27 23:29:58",
-      "body": "MIster",
-      "status": "Not complete"
-    },
-    {
       "id": "oeuxrk-pgoj-h7m6-u2pc1f",
       "timestamp": "2022-6-27 23:31:27",
       "body": "Milk the cows",
@@ -22,24 +16,6 @@
       "id": "m80zzp-qyi1-9b0j-ngnnbw",
       "timestamp": "2022-6-28 7:8:33",
       "body": "Do the axios assignment",
-      "status": "Not complete"
-    },
-    {
-      "id": "h1cvT4Y",
-      "timestamp": "9:55",
-      "body": "chapo",
-      "status": "Not Complete"
-    },
-    {
-      "id": "bhqvmy-3i72-s6og-56grcp",
-      "timestamp": "9:55",
-      "body": "cheza kama wewe",
-      "status": "Not Complete"
-    },
-    {
-      "id": "2i5xhv-4c6z-nl4i-7xtkw7",
-      "timestamp": "2022-7-2 9:12:57",
-      "body": "sema mzae",
       "status": "Not complete"
     }
   ]
