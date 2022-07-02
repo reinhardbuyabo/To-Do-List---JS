@@ -56,10 +56,9 @@ const displayAllTodos = () => {
 			});
 			document.querySelector(".fa-check").addEventListener("click", (e) => {
 				markTodoAsComplete(e.currentTarget.parentNode.parentNode.dataset.id);
-			})
+			});
 		}
 	}).catch(err => console.log(err));
-	console.log(Todos); 
 }
 
 displayAllTodos();
@@ -114,7 +113,7 @@ const editTodo = (itemId) => {
 	idField.value = id;
 	timeField.value = getTimeStamp(); 
 	bodyField.value = body;
-
+	displayAllTodos();
 }
 
 const generateID = () => {
