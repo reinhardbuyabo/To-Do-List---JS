@@ -1,11 +1,13 @@
-const addNewTodoButton = document.getElementById("add-new-todo");
-const createTodoButton = document.getElementById("create-todo");
-const updateTodoButton = document.getElementById("update-todo");
-const idField = document.getElementById("id-field");
-const timeField = document.getElementById("time-field");
-const bodyField = document.getElementById("body-field");
-const todoList = document.querySelector(".todo-content");
+const addNewTodoButton = document.getElementById("add-new-todo"); // Button referenced representing the add new todo.
+const createTodoButton = document.getElementById("create-todo"); // Button referenced representing create todo.
+const updateTodoButton = document.getElementById("update-todo"); // Button referenced  representing update todo. 
+const idField = document.getElementById("id-field"); // Input referenced representing the todo id. It is readonly.
+const timeField = document.getElementById("time-field"); // Input referenced representing the todo timestamp
+const bodyField = document.getElementById("body-field"); // Textarea referenced representing the todo body.
+const todoList = document.querySelector(".todo-content"); // Div referenced representing todo content.
 const div = document.createElement("div");
+let created = false;
+let output = false;
 
 updateTodoButton.style.display = "none"
 
@@ -15,10 +17,10 @@ let Todos = [];
 
 const displayAllTodos = () => {
 	todoList.innerHTML = ""
-	axios.get("http://localhost:3000/posts").then(res => {	
+	axios.get("http://localhost:8000/posts").then(res => {	
 		Todos = [...res.data]
 		if (Todos.length == 0) {
-
+			// Displays this if todo is empty.
 			todoList.innerHTML += `
 			<div class = "empty-todo">
 			<img src="./assets/images/undraw_empty_xct9.png" alt="empty image" style="width: 50%;">
@@ -29,7 +31,8 @@ const displayAllTodos = () => {
 			`;
 		} else {		
 			for(let key in Todos){
-				let todo = Todos[key];
+				// Adding todos to the div containing todo content gotten from the fetched url, depending on the number of todos.
+				let todo = Todos[key]; 
 				todoList.innerHTML += `
 				<div data-id="${todo.id}" class="todo-content-item">
 					<span class="todo-id">▪️ ${todo.id} ▪️</span>
@@ -43,14 +46,28 @@ const displayAllTodos = () => {
 					</div>
 				</div>
 				`;
+				output = true;
 			};
+			document.querySelector(".fa-edit").addEventListener("click", (e) => {
+				editTodo(e.currentTarget.parentNode.parentNode.dataset.id);
+			});
 		}
 	}).catch(err => console.log(err));
-
-	console.log(Todos);
+	console.log(Todos); 
 }
 
 displayAllTodos();
+
+// const myPromise = new Promise((res, rej) => {
+// 	displayAllTodos(); // Gets data from the url, loops through the array data and formats it to be represented to the to do list div.
+// 	res(output);
+// 	rej(new Error("No Todos"));
+// }).then((res) => {
+// 	if (res) {
+// 		console.log(todoList);
+// 	}
+// }).catch((err) => console.log(err));
+
 
 // const addTodo = () => {
 // 	const id = idField.value;
@@ -65,27 +82,31 @@ displayAllTodos();
 // }
 
 const addTodo = () => {
-	const id = idField.value;
-	const timestamp = timeField.value;
-	const body = bodyField.value;
+	const id = idField.value; // Gets data from the input's value.
+	const timestamp = timeField.value; // Gets data from the input's value.
+	const body = bodyField.value; // Get's data from the textarea's value.
 	const status = "Not complete";
-	axios
-    .post('http://localhost:3000/posts', {id,timestamp, body, status})
+	if (created == false) {
+		addNewTodo();
+	} else {
+		axios
+    .post('http://localhost:8000/posts', {id,timestamp, body, status})
     .then(res => console.log(res.data))
     .catch(err => console.error(err));
 	idField.value = "";
 	timeField.value = "";
 	bodyField.value = "";
 	displayAllTodos();
+	}
 }
 
 const editTodo = (itemId) => {
-	createTodoButton.style.display = "none"
-	updateTodoButton.style.display = "block"
-	const {id, timestamp, status, body} = Todos.filter(todo => todo.id == itemId)[0];
+	createTodoButton.style.display = "none" // Hides create todo button
+	updateTodoButton.style.display = "block" // Displays update todo button
+	const {id, timestamp, status, body} = Todos.filter(todo => todo.id == itemId)[0]; // Parameters from the const variable are new variables that will contain the data that will be filtered from the todos
 
 	idField.value = id;
-	timeField.value = getTimeStamp();
+	timeField.value = getTimeStamp(); 
 	bodyField.value = body;
 }
 
@@ -103,6 +124,7 @@ const getTimeStamp = () => {
 const addNewTodo = () => {
 	idField.value = generateID();
 	timeField.value = getTimeStamp();
+	created = true;
 }
 
 const deleteTodo = (itemId) => {
