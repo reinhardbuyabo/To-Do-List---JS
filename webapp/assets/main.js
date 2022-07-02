@@ -191,7 +191,12 @@ const markTodoAsComplete = (itemId) => {
 			return todo;
 		}
 	})
-	Todos = todos;
+
+	axios.patch(`http://localhost:8000/posts/${itemId}`,{
+		'status': 'Complete'
+	})
+
+	Todos = todos; // Sets the data in the program to agree with the one in the db.json.
 	displayAllTodos();
 }
 
